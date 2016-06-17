@@ -8,8 +8,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/pilu/config"
 )
 
 const (
@@ -18,11 +16,8 @@ const (
 )
 
 var settings = map[string]string{
-	"config_path":       "./runner.conf",
 	"root":              ".",
-	"tmp_path":          "./tmp",
-	"build_name":        "runner-build",
-	"build_log":         "runner-build-errors.log",
+	"build_name":        "tmp-bin",
 	"valid_ext":         ".go, .tpl, .tmpl, .html",
 	"ignored":           "assets, tmp",
 	"build_delay":       "600",
@@ -78,25 +73,8 @@ func loadEnvSettings() {
 	}
 }
 
-func loadRunnerConfigSettings() {
-	if _, err := os.Stat(configPath()); err != nil {
-		return
-	}
-
-	logger.Printf("Loading settings from %s", configPath())
-	sections, err := config.ParseFile(configPath(), mainSettingsSection)
-	if err != nil {
-		return
-	}
-
-	for key, value := range sections[mainSettingsSection] {
-		settings[key] = value
-	}
-}
-
 func initSettings() {
 	loadEnvSettings()
-	loadRunnerConfigSettings()
 }
 
 func getenv(key, defaultValue string) string {
@@ -111,31 +89,12 @@ func root() string {
 	return settings["root"]
 }
 
-func tmpPath() string {
-	return settings["tmp_path"]
-}
-
-func buildName() string {
-	return settings["build_name"]
-}
 func buildPath() string {
-	p := filepath.Join(tmpPath(), buildName())
+	p := filepath.Join(root(), settings["build_name"])
 	if runtime.GOOS == "windows" && filepath.Ext(p) != ".exe" {
 		p += ".exe"
 	}
 	return p
-}
-
-func buildErrorsFileName() string {
-	return settings["build_log"]
-}
-
-func buildErrorsFilePath() string {
-	return filepath.Join(tmpPath(), buildErrorsFileName())
-}
-
-func configPath() string {
-	return settings["config_path"]
 }
 
 func buildDelay() time.Duration {

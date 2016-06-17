@@ -3,7 +3,6 @@ package runner
 import (
 	"fmt"
 	"os"
-	"runtime"
 	"strings"
 	"time"
 )
@@ -18,11 +17,12 @@ var (
 	appLog       logFunc
 )
 
+// apparently this shouldn't even be necessary, but I don't know enough about how channels work.
 func flushEvents() {
 	for {
 		select {
 		case eventName := <-startChannel:
-			mainLog("receiving event %s", eventName)
+			eventName += ""
 		default:
 			return
 		}
@@ -38,21 +38,14 @@ func start() {
 	go func() {
 		for {
 			loopIndex++
-			mainLog("Waiting (loop %d)...", loopIndex)
-			eventName := <-startChannel
 
-			mainLog("receiving first event %s", eventName)
-			mainLog("sleeping for %d milliseconds", buildDelay)
+			// Flush. I have no idea how channels work, I'm just adoping what was here
+			eventName := <-startChannel
+			eventName += ""
+
 			time.Sleep(buildDelay * time.Millisecond)
-			mainLog("flushing events")
 
 			flushEvents()
-
-			mainLog("Started! (%d Goroutines)", runtime.NumGoroutine())
-			err := removeBuildErrorsLog()
-			if err != nil {
-				mainLog(err.Error())
-			}
 
 			errorMessage, ok := build()
 			if !ok {
@@ -60,7 +53,6 @@ func start() {
 				if !started {
 					os.Exit(1)
 				}
-				createBuildErrorsLog(errorMessage)
 			} else {
 				if started {
 					stopChannel <- true
@@ -69,7 +61,6 @@ func start() {
 			}
 
 			started = true
-			mainLog(strings.Repeat("-", 20))
 		}
 	}()
 }
@@ -103,10 +94,9 @@ func setEnvVars() {
 // Watches for file changes in the root directory.
 // After each file system event it builds and (re)starts the application.
 func Start() {
+	initLogFuncs()
 	initLimit()
 	initSettings()
-	initLogFuncs()
-	initFolders()
 	setEnvVars()
 	watch()
 	start()

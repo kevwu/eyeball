@@ -3,27 +3,20 @@ package runner
 import (
 	"fmt"
 	logPkg "log"
-	"time"
-
-	"github.com/mattn/go-colorable"
+	"os"
 )
 
 type logFunc func(string, ...interface{})
 
-var logger = logPkg.New(colorable.NewColorableStderr(), "", 0)
+var logger = logPkg.New(os.Stdout, "", 0)
 
 func newLogFunc(prefix string) func(string, ...interface{}) {
-	color, clear := "", ""
-	if settings["colors"] == "1" {
-		color = fmt.Sprintf("\033[%sm", logColor(prefix))
-		clear = fmt.Sprintf("\033[%sm", colors["reset"])
-	}
-	prefix = fmt.Sprintf("%-11s", prefix)
-
 	return func(format string, v ...interface{}) {
-		now := time.Now()
-		timeString := fmt.Sprintf("%d:%d:%02d", now.Hour(), now.Minute(), now.Second())
-		format = fmt.Sprintf("%s%s %s |%s %s", color, timeString, prefix, clear, format)
+		if prefix != "app" {
+			format = fmt.Sprintf("[eyeball] \033[35m%s\033[0m", format)
+		} else {
+			format = fmt.Sprintf("[app out] %s", format)
+		}
 		logger.Printf(format, v...)
 	}
 }

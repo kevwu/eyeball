@@ -4,7 +4,6 @@ package runner
 
 import (
 	"syscall"
-	"fmt"
 )
 
 func initLimit() {
@@ -13,6 +12,6 @@ func initLimit() {
 	rLimit.Cur = 10000
 	err := syscall.Setrlimit(syscall.RLIMIT_NOFILE, &rLimit)
 	if err != nil {
-		fmt.Println("Error Setting Rlimit ", err)
+		mainLog("Error setting RLIMIT_NOFILE. Try running as root.")
 	}
 }

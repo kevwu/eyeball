@@ -1,12 +1,19 @@
-# Fresh
+# eyeball 👁
 
-[![Join the chat at https://gitter.im/pilu/fresh](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/pilu/fresh?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+eyeball is a simple Go program that rebuilds and re-runs a Go project when it notices the files have changed.
 
-Fresh is a command line tool that builds and (re)starts your web application everytime you save a Go or template file.
+This project is a modified version of [pilu/fresh](https://github.com/pilu/fresh), made to be much simpler.
 
-If the web framework you are using supports the Fresh runner, it will show build errors on your browser.
+## Changes
+- Removed need for a tmp folder
+- Removed need for a config file (config is now compiled into settings.go)
+- Made output less verbose
+- Made output less frequent
+- Removed unnecessary colors on output
 
-It currently works with [Traffic](https://github.com/pilu/traffic), [Martini](https://github.com/codegangsta/martini) and [gocraft/web](https://github.com/gocraft/web).
+Original README.md follows. Functionality may have been changed or no longer work.
+
+---
 
 ## Installation
 

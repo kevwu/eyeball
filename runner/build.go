@@ -8,7 +8,7 @@ import (
 )
 
 func build() (string, bool) {
-	buildLog("Building...")
+	buildLog("Building.")
 
 	cmd := exec.Command("go", "build", "-o", buildPath(), root())
 

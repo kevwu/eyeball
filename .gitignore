@@ -2,8 +2,6 @@
 
 .DS_Store
 tmp
-/fresh
-/runner.conf.dev
 
 *.o
 *.a
@@ -26,3 +24,6 @@ _cgo_export.*
 _testmain.go
 
 *.exe
+
+eyeball
+tmp-bin

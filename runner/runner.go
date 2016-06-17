@@ -6,9 +6,9 @@ import (
 )
 
 func run() bool {
-	runnerLog("Running...")
+	runnerLog("Running.")
 
-	cmd := exec.Command(buildPath())
+	cmd := exec.Command("./" + buildPath())
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
