@@ -49,7 +49,7 @@ func start() {
 
 			errorMessage, ok := build()
 			if !ok {
-				mainLog("Build Failed: \n %s", errorMessage)
+				mainLog("Build failed:\n\033[0m%s\033[0m", errorMessage)
 			} else {
 				if started {
 					stopChannel <- true
