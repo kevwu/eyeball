@@ -50,9 +50,6 @@ func start() {
 			errorMessage, ok := build()
 			if !ok {
 				mainLog("Build Failed: \n %s", errorMessage)
-				if !started {
-					os.Exit(1)
-				}
 			} else {
 				if started {
 					stopChannel <- true
