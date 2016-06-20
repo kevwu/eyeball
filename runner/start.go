@@ -39,7 +39,7 @@ func start() {
 		for {
 			loopIndex++
 
-			// Flush. I have no idea how channels work, I'm just adoping what was here
+			// Flush. I have no idea how channels work, I'm just adopting what was here
 			eventName := <-startChannel
 			eventName += ""
 

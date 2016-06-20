@@ -1,44 +1,28 @@
 package runner
 
 import (
-	"io"
-	"io/ioutil"
-	"os"
+	// "io"
+	// "io/ioutil"
+	// "os"
 	"os/exec"
 )
 
 func build() (string, bool) {
 	buildLog("Fetching dependencies.")
 
-	if err := exec.Command("go", "get").Run(); err != nil {
+	out, err := exec.Command("go", "get").CombinedOutput()
+	buildLog("\033[0m" + string(out))
+	if err != nil {
 		return err.Error(), false
 	}
 
 	buildLog("Building.")
 
-	cmd := exec.Command("go", "build", "-x", "-o", buildPath(), root())
+	out, err = exec.Command("go", "build", "-x", "-o", buildPath(), root()).CombinedOutput()
 
-	stderr, err := cmd.StderrPipe()
+	buildLog("\033[0m" + string(out))
 	if err != nil {
-		fatal(err)
-	}
-
-	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		fatal(err)
-	}
-
-	err = cmd.Start()
-	if err != nil {
-		fatal(err)
-	}
-
-	io.Copy(os.Stdout, stdout)
-	errBuf, _ := ioutil.ReadAll(stderr)
-
-	err = cmd.Wait()
-	if err != nil {
-		return string(errBuf), false
+		return err.Error(), false
 	}
 
 	return "", true
