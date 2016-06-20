@@ -18,7 +18,7 @@ func build() (string, bool) {
 
 	buildLog("Building.")
 
-	out, err = exec.Command("go", "build", "-x", "-o", buildPath(), root()).CombinedOutput()
+	out, err = exec.Command("go", "build", "-o", buildPath(), root()).CombinedOutput()
 
 	buildLog("\033[0m" + string(out))
 	if err != nil {
