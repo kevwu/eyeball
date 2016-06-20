@@ -16,7 +16,7 @@ func build() (string, bool) {
 
 	buildLog("Building.")
 
-	cmd := exec.Command("go", "build", "-o", buildPath(), root())
+	cmd := exec.Command("go", "build", "-x", "-o", buildPath(), root())
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
