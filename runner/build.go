@@ -8,9 +8,15 @@ import (
 )
 
 func build() (string, bool) {
+	buildLog("Fetching dependencies.")
+
+	if err := exec.Command("go", "get").Run(); err != nil {
+		return err.Error(), false
+	}
+
 	buildLog("Building.")
 
-	cmd := exec.Command("go", "get")
+	cmd := exec.Command("go", "build", "-o", buildPath(), root())
 
 	stderr, err := cmd.StderrPipe()
 	if err != nil {
@@ -18,25 +24,6 @@ func build() (string, bool) {
 	}
 
 	stdout, err := cmd.StdoutPipe()
-	if err != nil {
-		fatal(err)
-	}
-
-	err = cmd.Start()
-	if err != nil {
-		fatal(err)
-	}
-
-	io.Copy(os.Stdout, stdout)
-
-	cmd = exec.Command("go", "build", "-o", buildPath(), root())
-
-	stderr, err = cmd.StderrPipe()
-	if err != nil {
-		fatal(err)
-	}
-
-	stdout, err = cmd.StdoutPipe()
 	if err != nil {
 		fatal(err)
 	}
